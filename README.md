@@ -32,4 +32,4 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Contributing
 
-This repository is a class project for Udacity React Nanodegree Program. Therefore, I most likely will not accept pull requests.
+This repository is a class project for [Udacity React Nanodegree Program](https://www.udacity.com/course/react-nanodegree--nd019). Therefore, I most likely will not accept pull requests.
