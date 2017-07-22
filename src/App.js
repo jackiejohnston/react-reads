@@ -1,5 +1,6 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
+import Books from './Books'
 import './App.css'
 
 class BooksApp extends React.Component {
@@ -26,15 +27,15 @@ class BooksApp extends React.Component {
     const shelves = [
       {
         title: "Currently Reading",
-        category: "currentlyReading"
+        id: "currentlyReading"
       },
       {
         title: "Want to Read",
-        category: "wantToRead"
+        id: "wantToRead"
       },
       {
         title: "Read",
-        category: "read"
+        id: "read"
       }
     ]
 
@@ -61,33 +62,10 @@ class BooksApp extends React.Component {
             <div className="list-books-content">
               <div>
                 {shelves.map(shelf => (
-                  <div className="bookshelf" key={shelf.title}>
+                  <div className="bookshelf" key={shelf.id}>
                     <h2 className="bookshelf-title">{shelf.title}</h2>
                     <div className="bookshelf-books">
-                      <ol className="books-grid">
-                        {this.state.books.filter(book => book.shelf === shelf.category).map((book,index) => (
-                          <li key={index}>
-                            <div className="book">
-                              <div className="book-top">
-                                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
-                                <div className="book-shelf-changer">
-                                  <select>
-                                    <option value="none" disabled>Move to...</option>
-                                    <option value="currentlyReading">Currently Reading</option>
-                                    <option value="wantToRead">Want to Read</option>
-                                    <option value="read">Read</option>
-                                    <option value="none">None</option>
-                                  </select>
-                                </div>
-                              </div>
-                              <div className="book-title">{book.title}</div>
-                              {book.authors.map(author =>
-                                <div className="book-authors">{author}</div>
-                              )}
-                            </div>
-                          </li>
-                        ))}
-                      </ol>
+                      <Books books={this.state.books.filter(book => book.shelf === shelf.id)} />
                     </div>
                   </div>
                 ))}
