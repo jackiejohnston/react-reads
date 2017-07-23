@@ -13,18 +13,8 @@ class BooksApp extends React.Component {
      * pages, as well as provide a good URL they can bookmark and share.
      */
     showSearchPage: false,
-    books: []
-  }
-
-  componentDidMount() {
-    BooksAPI.getAll().then((books) => {
-      this.setState({ books })
-      // console.log({ books })
-    })
-  }
-
-  render() {
-    const shelves = [
+    books: [],
+    shelves: [
       {
         title: "Currently Reading",
         id: "currentlyReading"
@@ -38,8 +28,16 @@ class BooksApp extends React.Component {
         id: "read"
       }
     ]
+  }
 
+  componentDidMount() {
+    BooksAPI.getAll().then((books) => {
+      this.setState({ books })
+      // console.log({ books })
+    })
+  }
 
+  render() {
     return (
       <div className="app">
         {this.state.showSearchPage ? (
@@ -61,7 +59,7 @@ class BooksApp extends React.Component {
             </div>
             <div className="list-books-content">
               <div>
-                {shelves.map(shelf => (
+                {this.state.shelves.map(shelf => (
                   <div className="bookshelf" key={shelf.id}>
                     <h2 className="bookshelf-title">{shelf.title}</h2>
                     <div className="bookshelf-books">
