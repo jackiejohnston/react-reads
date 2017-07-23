@@ -30,10 +30,19 @@ class BooksApp extends React.Component {
     ]
   }
 
-  componentDidMount() {
+  getBooks() {
     BooksAPI.getAll().then((books) => {
       this.setState({ books })
-      // console.log({ books })
+    })
+  }
+
+  componentDidMount() {
+    this.getBooks()
+  }
+
+  moveBook = (event, book) => {
+    BooksAPI.update(book, event.target.value).then(() => {
+      this.getBooks()
     })
   }
 
@@ -63,7 +72,7 @@ class BooksApp extends React.Component {
                   <div className="bookshelf" key={shelf.id}>
                     <h2 className="bookshelf-title">{shelf.title}</h2>
                     <div className="bookshelf-books">
-                      <Books books={this.state.books.filter(book => book.shelf === shelf.id)} />
+                      <Books books={this.state.books.filter(book => book.shelf === shelf.id)} onMoveBook={this.moveBook} />
                     </div>
                   </div>
                 ))}
