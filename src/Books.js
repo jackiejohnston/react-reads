@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 function Books (props) {
   return (
@@ -29,5 +30,9 @@ function Books (props) {
   )
 }
 
+Books.propTypes = {
+  books: PropTypes.array.isRequired,
+  onMoveBook: PropTypes.func.isRequired
+}
 
 export default Books
