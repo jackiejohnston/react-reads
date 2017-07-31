@@ -27,7 +27,9 @@ class BooksApp extends React.Component {
         title: "Read",
         id: "read"
       }
-    ]
+    ],
+    query: "Android",
+    searchResults: []
   }
 
   getBooks() {
@@ -36,8 +38,15 @@ class BooksApp extends React.Component {
     })
   }
 
+  searchBooks(query) {
+    BooksAPI.search(query, 20).then((searchResults) => {
+      this.setState({ searchResults })
+    })
+  }
+
   componentDidMount() {
     this.getBooks()
+    this.searchBooks(this.state.query)
   }
 
   moveBook = (event, book) => {
@@ -58,7 +67,20 @@ class BooksApp extends React.Component {
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid"></ol>
+              {this.state.query.length ? (
+                <div className="bookshelf" key="none">
+                  <h2 className="bookshelf-title">Search Results</h2>
+                  <div className="bookshelf-books">
+                    {this.state.searchResults.length ? (
+                      <Books books={this.state.searchResults} onMoveBook={this.moveBook} />
+                    ) : (
+                      <div>No matching books found.</div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div></div>
+              )}
             </div>
           </div>
         ) : (
