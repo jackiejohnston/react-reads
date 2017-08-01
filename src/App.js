@@ -67,7 +67,7 @@ class BooksApp extends React.Component {
         <Route path='/search' render={() => (
           <div className="search-books">
             <div className="search-books-bar">
-              <Link to="/" className="close-search">Close</Link>
+              <Link to="/" className="close-search" onClick={(event) => this.updateQuery("")}>Close</Link>
               <div className="search-books-input-wrapper">
                 <form>
                   <input type="text" placeholder="Search by title or author" value={query} onChange={(event) => this.updateQuery(event.target.value)} />
