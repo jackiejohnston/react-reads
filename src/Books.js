@@ -20,12 +20,11 @@ function Books (props) {
               </div>
             </div>
             <div className="book-title">{book.title}</div>
-              {book.authors === undefined ?
-                <div></div> :
+              {book.authors !== undefined && (
                 book.authors.map((author,index) =>
                   <div key={index} className="book-authors">{author}</div>
                 )
-              }
+              )}
           </div>
         </li>
       ))}

@@ -1,4 +1,6 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import Books from './Books'
 import './App.css'
@@ -6,13 +8,6 @@ import './App.css'
 class BooksApp extends React.Component {
 
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-    showSearchPage: false,
     books: [],
     shelves: [
       {
@@ -28,7 +23,7 @@ class BooksApp extends React.Component {
         id: "read"
       }
     ],
-    query: "Android",
+    query: "",
     searchResults: []
   }
 
@@ -41,9 +36,9 @@ class BooksApp extends React.Component {
   searchBooks(query) {
     BooksAPI.search(query, 20).then((searchResults) => {
       searchResults.map(foundBook =>
-        this.state.books.filter(libraryBook => libraryBook.id === foundBook.id).length
-        ? foundBook.shelf = this.state.books.filter(libraryBook => libraryBook.id === foundBook.id)[0].shelf
-        : foundBook
+        this.state.books.filter(libraryBook => libraryBook.id === foundBook.id).length && (
+          foundBook.shelf = this.state.books.filter(libraryBook => libraryBook.id === foundBook.id)[0].shelf
+        )
       )
       this.setState({ searchResults })
     })
@@ -51,7 +46,6 @@ class BooksApp extends React.Component {
 
   componentDidMount() {
     this.getBooks()
-    this.searchBooks(this.state.query)
   }
 
   moveBook = (event, book) => {
@@ -60,56 +54,66 @@ class BooksApp extends React.Component {
     })
   }
 
+  updateQuery = (query) => {
+    this.setState({ query: query.trim() })
+    this.searchBooks(this.state.query)
+  }
+
   render() {
+    const { searchResults, books, shelves, query } = this.state
     return (
       <div className="app">
-        {this.state.showSearchPage ? (
+
+        <Route path='/search' render={() => (
           <div className="search-books">
             <div className="search-books-bar">
-              <a className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</a>
+              <Link to="/" className="close-search">Close</Link>
               <div className="search-books-input-wrapper">
-                <input type="text" placeholder="Search by title or author"/>
+                <form>
+                  <input type="text" placeholder="Search by title or author" value={query} onChange={(event) => this.updateQuery(event.target.value)} />
+                </form>
               </div>
             </div>
             <div className="search-books-results">
-              {this.state.query.length ? (
+              {query !== "" && (
                 <div className="bookshelf" key="none">
                   <h2 className="bookshelf-title">Search Results</h2>
                   <div className="bookshelf-books">
-                    {this.state.searchResults.length ? (
-                      <Books books={this.state.searchResults} onMoveBook={this.moveBook} />
+                    {searchResults.length ? (
+                      <Books books={searchResults} onMoveBook={this.moveBook} />
                     ) : (
                       <div>No matching books found.</div>
                     )}
                   </div>
                 </div>
-              ) : (
-                <div></div>
               )}
             </div>
           </div>
-        ) : (
+        )}/>
+
+        <Route exact path='/' render={() => (
           <div className="list-books">
             <div className="list-books-title">
               <h1>MyReads</h1>
             </div>
             <div className="list-books-content">
               <div>
-                {this.state.shelves.map(shelf => (
+                {shelves.map(shelf => (
                   <div className="bookshelf" key={shelf.id}>
                     <h2 className="bookshelf-title">{shelf.title}</h2>
                     <div className="bookshelf-books">
-                      <Books books={this.state.books.filter(book => book.shelf === shelf.id)} onMoveBook={this.moveBook} />
+                      <Books books={books.filter(book => book.shelf === shelf.id)} onMoveBook={this.moveBook} />
                     </div>
                   </div>
                 ))}
               </div>
             </div>
             <div className="open-search">
-              <a onClick={() => this.setState({ showSearchPage: true })}>Add a book</a>
+              <Link to="/search">Add a book</Link>
             </div>
           </div>
-        )}
+        )}/>
+
       </div>
     )
   }
